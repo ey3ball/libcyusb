@@ -7,11 +7,11 @@ set(LIBCYUSB_VERSION_MINOR 0)
 set(LIBCYUSB_VERSION_PATCH 5)
 set(LIBCYUSB_VERSION ${LIBCYUSB_VERSION_MAJOR}.${LIBCYUSB_VERSION_MINOR}.${LIBCYUSB_VERSION_PATCH} )
 
-# This should work, maybe...
-# find_package(libusb1 REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
 add_library(cyusb SHARED "lib/libcyusb.cpp")
 set_target_properties(cyusb PROPERTIES PUBLIC_HEADER "include/cyusb.h")
-target_link_libraries(cyusb usb-1.0)
+target_link_libraries(cyusb PkgConfig::libusb)
 
 set_target_properties(cyusb PROPERTIES VERSION ${LIBCYUSB_VERSION}
                                        SOVERSION ${LIBCYUSB_VERSION_MAJOR})
