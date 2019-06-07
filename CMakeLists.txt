@@ -17,6 +17,7 @@ set_target_properties(cyusb PROPERTIES VERSION ${LIBCYUSB_VERSION}
                                        SOVERSION ${LIBCYUSB_VERSION_MAJOR})
 
 install(TARGETS cyusb
+        EXPORT cyusbTargets
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -26,6 +27,22 @@ install(FILES configs/cyusb.conf
         DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR})
 install(FILES configs/88-cyusb.rules
         DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/udev/rules.d")
+
+include(CMakePackageConfigHelpers)
+
+write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/cyusbConfigVersion.cmake"
+    VERSION ${LIBCYUSB_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+configure_file(cyusbConfig.cmake "${CMAKE_CURRENT_BINARY_DIR}/cyusbConfig.cmake" COPYONLY)
+
+set(ConfigPackageLocation "${CMAKE_INSTALL_LIBDIR}/cmake/cyusb")
+install(EXPORT cyusbTargets DESTINATION "${ConfigPackageLocation}")
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cyusbConfig.cmake"
+               "${CMAKE_CURRENT_BINARY_DIR}/cyusbConfigVersion.cmake"
+        DESTINATION "${ConfigPackageLocation}")
 
 set(CPACK_GENERATOR "DEB")
 
